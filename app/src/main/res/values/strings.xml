@@ -1,9 +1,34 @@
 <resources>
+
+    <!-- - - - - - - - - - - - - - - - - -
+      - Used throughout Money Analytics  -
+      - - - - - - - - - - - - - - - - - -->
+
+    <!-- Application name -->
     <string name="app_name">Money Analytics</string>
+
+
+    <!-- - - - - - - - - - - - - - -
+      - Used in Application Drawer -
+      - - - - - - - - - - - - - - -->
+
+    <!-- Application drawer action strings -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+
+    <!-- Analytics section -->
+    <string name="nav_drawer_analytics_title">Analytics</string>
+    <string name="nav_drawer_income_string">Income</string>
+    <string name="nav_drawer_expenses_string">Expenses</string>
+    <string name="nav_drawer_savings_string">Savings</string>
+
+    <!-- Tracking period section -->
+    <string name="nav_drawer_period_title">Tracking period</string>
+    <string name="nav_drawer_today_string">Today</string>
+    <string name="nav_drawer_week_string">This week</string>
+    <string name="nav_drawer_month_string">This month</string>
+    <string name="nav_drawer_date_string">Pick a date</string>
+
+    <!-- About section -->
+    <string name="nav_drawer_about_string">About</string>
 </resources>

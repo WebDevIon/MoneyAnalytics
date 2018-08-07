@@ -1,38 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
-    </group>
-
-    <item android:title="Communicate">
+    <item android:title="@string/nav_drawer_analytics_title">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/nav_income"
+                android:title="@string/nav_drawer_income_string" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_expenses"
+                android:title="@string/nav_drawer_expenses_string" />
+            <item
+                android:id="@+id/nav_savings"
+                android:title="@string/nav_drawer_savings_string" />
         </menu>
     </item>
+
+    <item android:title="@string/nav_drawer_period_title">
+        <menu>
+            <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/nav_today"
+                        android:title="@string/nav_drawer_today_string" />
+                    <item
+                        android:id="@+id/nav_this_week"
+                        android:title="@string/nav_drawer_week_string" />
+                    <item
+                        android:id="@+id/nav_this_month"
+                        android:title="@string/nav_drawer_month_string" />
+                    <item
+                        android:id="@+id/nav_pick_a_date"
+                        android:title="@string/nav_drawer_date_string" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:id="@+id/nav_about"
+        android:title="@string/nav_drawer_about_string"/>
 
 </menu>
