@@ -31,4 +31,13 @@
 
     <!-- About section -->
     <string name="nav_drawer_about_string">About</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_income_fragment">Hello income fragment</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_expenses_fragment">Hello expenses fragment</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_savings_fragment">Hello savings fragment</string>
 </resources>
