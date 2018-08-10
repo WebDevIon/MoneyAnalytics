@@ -6,9 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.example.android.moneyanalytics.ExpensesFragment;
 import com.example.android.moneyanalytics.R;
-import com.example.android.moneyanalytics.SavingsFragment;
 
 /**
  * Detail activity that displays the correct fragment according to the user selection.

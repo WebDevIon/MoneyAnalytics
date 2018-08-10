@@ -18,6 +18,8 @@
 
     <!-- Analytics section -->
     <string name="nav_drawer_analytics_title">Analytics</string>
+    <!-- Income, Expenses and Savings string resources are also
+    used to display the correct fragment in Detail Activity -->
     <string name="nav_drawer_income_string">Income</string>
     <string name="nav_drawer_expenses_string">Expenses</string>
     <string name="nav_drawer_savings_string">Savings</string>
@@ -40,4 +42,13 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_savings_fragment">Hello savings fragment</string>
+
+
+    <!-- - - - - - - - - - - - -
+      - Used in About Activity -
+      - - - - - - - - - - - - -->
+
+    <string name="about_activity_description_tv">
+        This app was made as a final project of the Android Developer Nanodegree by Udacity and Google.
+    </string>
 </resources>
