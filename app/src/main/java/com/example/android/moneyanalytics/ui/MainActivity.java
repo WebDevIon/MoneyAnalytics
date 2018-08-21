@@ -1,8 +1,10 @@
 package com.example.android.moneyanalytics.ui;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,12 +14,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.example.android.moneyanalytics.R;
+import com.example.android.moneyanalytics.chart.PieChartData;
+import com.razerdp.widget.animatedpieview.AnimatedPieView;
+import com.razerdp.widget.animatedpieview.AnimatedPieViewConfig;
+import com.razerdp.widget.animatedpieview.data.SimplePieInfo;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String DETAIL_ACTIVITY_KEY = "detail activity";
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +40,24 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        AnimatedPieView mAnimatedPieView = findViewById(R.id.main_activity_pie_view);
+        AnimatedPieViewConfig config = new AnimatedPieViewConfig();
+        config.startAngle(-90)
+                .addData(new SimplePieInfo(10, getColor(R.color.colorPrimary), "Other"))
+                .addData(new SimplePieInfo(60, getColor(R.color.colorPrimaryDark), "Food"))
+                .addData(new PieChartData(30, getResources().getColor(R.color.colorAccent), "Car"))
+                .strokeWidth(200)
+                .canTouch(false)
+                .drawText(true)
+                .textSize(80)
+                .textMargin(8)
+                .guidePointRadius(8)
+                .guideLineWidth(6)
+                .textGravity(AnimatedPieViewConfig.ECTOPIC)
+                .duration(700);
+
+        mAnimatedPieView.start(config);
     }
 
     /**

@@ -51,4 +51,37 @@
     <string name="about_activity_description_tv">
         This app was made as a final project of the Android Developer Nanodegree by Udacity and Google.
     </string>
+
+
+    <!-- - - - - - - - - - - - -
+      - Used in Main Activity  -
+      - - - - - - - - - - - - -->
+
+    <!-- Balance text in main activity -->
+    <string name="main_activity_balance_text">Balance</string>
+
+    <!-- Main activity button text and content description -->
+    <string name="main_activity_income_button_text">Add Income</string>
+    <string name="main_activity_expense_button_text">Add Expense</string>
+
+
+    <!-- - - - - - - - - - - - - - - - - -
+      - Used in Spinner period selector  -
+      - - - - - - - - - - - - - - - - - -->
+
+    <!-- Default text in spinner -->
+    <string name="spinner_period_prompt">Pick a period</string>
+
+    <!-- Spinner options array -->
+    <string-array name="spinner_period_array">
+        <item>@string/nav_drawer_today_string</item>
+        <item>@string/nav_drawer_week_string</item>
+        <item>@string/nav_drawer_month_string</item>
+        <item>@string/nav_drawer_date_string</item>
+    </string-array>
+
+
+    <!-- - - - - - - - - - - - - -
+      - Used in Income Fragment  -
+      - - - - - - - - - - - - - -->
 </resources>

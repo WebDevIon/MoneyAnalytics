@@ -5,10 +5,12 @@
     android:layout_height="match_parent"
     tools:context=".ui.ExpensesFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_expenses_fragment" />
+    <Spinner
+        android:id="@+id/expenses_fragment_period_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:entries="@array/spinner_period_array"
+        android:prompt="@string/spinner_period_prompt"/>
 
 </FrameLayout>
