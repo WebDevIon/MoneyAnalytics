@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.android.moneyanalytics.R;
 import com.example.android.moneyanalytics.chart.PieChartData;
@@ -20,9 +22,11 @@ import com.razerdp.widget.animatedpieview.AnimatedPieViewConfig;
 import com.razerdp.widget.animatedpieview.data.SimplePieInfo;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        DatePickerFragment.OnCompleteListener{
 
     public static final String DETAIL_ACTIVITY_KEY = "detail activity";
+    private TextView mPeriodTv;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -31,6 +35,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mPeriodTv = findViewById(R.id.main_period_tv);
 
         // Here we initialize the drawer and we handle it's states (open or closed)
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -109,11 +115,21 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_today) {
 
+            mPeriodTv.setText(R.string.nav_drawer_today_string);
+
         } else if (id == R.id.nav_this_week) {
+
+            mPeriodTv.setText(R.string.nav_drawer_week_string);
 
         } else if (id == R.id.nav_this_month) {
 
+            mPeriodTv.setText(R.string.nav_drawer_month_string);
+
         } else if (id == R.id.nav_pick_a_date) {
+
+            DialogFragment datePickerFragment = new DatePickerFragment();
+            datePickerFragment.show(getSupportFragmentManager(), "datePicker");
+
 
         } else if (id == R.id.nav_about) {
 
@@ -125,5 +141,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onDatePicked(String date) {
+        mPeriodTv.setText(date);
     }
 }
