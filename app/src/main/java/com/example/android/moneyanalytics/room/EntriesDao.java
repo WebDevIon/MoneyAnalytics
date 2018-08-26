@@ -21,11 +21,17 @@ public interface EntriesDao {
     @Query("SELECT * FROM entries ORDER BY id")
     LiveData<List<Entry>> loadAllEntries();
 
-    @Query("SELECT * FROM entries WHERE category LIKE :entryCategory")
-    LiveData<List<Entry>> loadCategory(String entryCategory);
+    @Query("SELECT * FROM entries WHERE category LIKE :entryCategory AND date LIKE :entryDate")
+    LiveData<List<Entry>> loadSpecificDateCategory(String entryCategory, Date entryDate);
+
+    @Query("SELECT * FROM entries WHERE category LIKE :entryCategory AND date BETWEEN :startDate AND :endDate")
+    LiveData<List<Entry>> loadPeriodDateCategory(String entryCategory, Date startDate, Date endDate);
 
     @Query("SELECT * FROM entries WHERE date LIKE :entryDate")
-    LiveData<List<Entry>> loadDate(Date entryDate);
+    LiveData<List<Entry>> loadSpecificDate(Date entryDate);
+
+    @Query("SELECT * FROM entries WHERE date BETWEEN :startDate AND :endDate")
+    LiveData<List<Entry>> loadPeriodDate(Date startDate, Date endDate);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertTask(Entry recipe);
