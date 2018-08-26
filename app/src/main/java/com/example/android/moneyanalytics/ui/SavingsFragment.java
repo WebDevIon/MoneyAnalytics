@@ -9,6 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.moneyanalytics.R;
+import com.example.android.moneyanalytics.chart.PieChartData;
+import com.razerdp.widget.animatedpieview.AnimatedPieView;
+import com.razerdp.widget.animatedpieview.AnimatedPieViewConfig;
+import com.razerdp.widget.animatedpieview.data.SimplePieInfo;
 
 
 /**
@@ -66,7 +70,28 @@ public class SavingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_savings, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_savings, container, false);
+
+        //TODO: Remove dummy data for testing purposes only
+        AnimatedPieView mAnimatedPieView = rootView.findViewById(R.id.savings_fragment_pie_view);
+        AnimatedPieViewConfig config = new AnimatedPieViewConfig();
+        config.startAngle(-90)
+                .addData(new SimplePieInfo(10, getResources().getColor(R.color.colorPrimary), "Other"))
+                .addData(new SimplePieInfo(60, getResources().getColor(R.color.colorPrimaryDark), "Food"))
+                .addData(new PieChartData(30, getResources().getColor(R.color.colorAccent), "Car"))
+                .strokeWidth(200)
+                .canTouch(false)
+                .drawText(true)
+                .textSize(80)
+                .textMargin(8)
+                .guidePointRadius(8)
+                .guideLineWidth(6)
+                .textGravity(AnimatedPieViewConfig.ECTOPIC)
+                .duration(700);
+
+        mAnimatedPieView.start(config);
+
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

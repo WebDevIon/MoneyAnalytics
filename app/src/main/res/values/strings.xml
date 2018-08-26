@@ -95,4 +95,27 @@
 
     <!-- Total text in Expense fragment -->
     <string name="expense_fragment_total_tv">Total</string>
+
+
+    <!-- - - - - - - - - - - - - -
+      - Used in Savings Fragment -
+      - - - - - - - - - - - - - -->
+
+    <!-- Goal text in Savings fragment -->
+    <string name="savings_fragment_goal_tv">Goal</string>
+
+    <!-- Due date text in Savings fragment -->
+    <string name="savings_fragment_due_tv">Due date</string>
+
+    <!-- Daily average text in Savings fragment -->
+    <string name="savings_fragment_average_tv">Daily average</string>
+
+    <!-- Biggest save text in Savings fragment -->
+    <string name="savings_fragment_biggest_tv">Biggest save</string>
+
+    <!-- Set goal button text in Savings fragment -->
+    <string name="savings_fragment_set_goal_text">Set goal</string>
+
+    <!-- Edit goal button text in Savings fragment -->
+    <string name="savings_fragment_edit_goal_text">Edit goal</string>
 </resources>
