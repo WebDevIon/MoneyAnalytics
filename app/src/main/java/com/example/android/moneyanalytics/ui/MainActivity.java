@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //TODO: Remove dummy data for testing purposes only
         AnimatedPieView mAnimatedPieView = findViewById(R.id.main_activity_pie_view);
         AnimatedPieViewConfig config = new AnimatedPieViewConfig();
         config.startAngle(-90)

@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.example.android.moneyanalytics.R;
+import com.example.android.moneyanalytics.chart.PieChartData;
+import com.example.android.moneyanalytics.model.Income;
+import com.example.android.moneyanalytics.model.IncomeAdapter;
+import com.razerdp.widget.animatedpieview.AnimatedPieView;
+import com.razerdp.widget.animatedpieview.AnimatedPieViewConfig;
+import com.razerdp.widget.animatedpieview.data.SimplePieInfo;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 
 /**
@@ -77,6 +89,39 @@ public class IncomeFragment extends Fragment {
                 R.array.spinner_period_array, R.layout.spinner_item);
         adapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(adapter);
+
+        //TODO: Remove dummy data for testing purposes only
+        AnimatedPieView mAnimatedPieView = rootView.findViewById(R.id.income_fragment_pie_view);
+        AnimatedPieViewConfig config = new AnimatedPieViewConfig();
+        config.startAngle(-90)
+                .addData(new SimplePieInfo(10, getResources().getColor(R.color.colorPrimary), "Other"))
+                .addData(new SimplePieInfo(60, getResources().getColor(R.color.colorPrimaryDark), "Food"))
+                .addData(new PieChartData(30, getResources().getColor(R.color.colorAccent), "Car"))
+                .strokeWidth(200)
+                .canTouch(false)
+                .drawText(true)
+                .textSize(80)
+                .textMargin(8)
+                .guidePointRadius(8)
+                .guideLineWidth(6)
+                .textGravity(AnimatedPieViewConfig.ECTOPIC)
+                .duration(700);
+
+        mAnimatedPieView.start(config);
+
+        RecyclerView recyclerView = rootView.findViewById(R.id.income_fragment_rv);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+
+        // TODO: Remove dummy data
+        List<Income> incomes = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            incomes.add(new Income("Salary", Calendar.getInstance().getTime(), 2000d));
+        }
+
+        IncomeAdapter incomeAdapter = new IncomeAdapter(incomes, getContext());
+        recyclerView.setAdapter(incomeAdapter);
 
         return rootView;
     }
