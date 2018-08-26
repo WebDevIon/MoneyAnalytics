@@ -1,9 +1,15 @@
 package com.example.android.moneyanalytics.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
 import java.util.Date;
 
+@Entity(tableName = "entries")
 public class Entry {
 
+    @PrimaryKey
+    private int id;
     private Double amount;
     private String name;
     private String category;
@@ -11,13 +17,23 @@ public class Entry {
     private Date date;
     private String type;
 
-    public Entry(){}
-
-    // TODO Remove constructor it is used for testing purposes only.
-    public Entry(String name, Date date, Double amount) {
-        this.name = name;
-        this.date = date;
+    public Entry(int id, Double amount, String name, String category,
+                 boolean recurring, Date date, String type){
+        this.id = id;
         this.amount = amount;
+        this.name = name;
+        this.category = category;
+        this.recurring = recurring;
+        this.date = date;
+        this.type = type;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Double getAmount() {
