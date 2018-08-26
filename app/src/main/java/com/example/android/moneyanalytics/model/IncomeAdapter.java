@@ -21,14 +21,14 @@ public class IncomeAdapter extends RecyclerView.Adapter<IncomeAdapter.IncomeView
 
     private final static String LOG_TAG = IncomeAdapter.class.getSimpleName();
     private final Context mContext;
-    private final List<Income> mIncomes;
+    private final List<Entry> mIncomes;
 
     /**
      * This is the constructor for the IncomeAdapter
-     * @param incomes the List of Income objects received from the database.
+     * @param incomes the List of Entry objects received from the database.
      * @param context the context of the application.
      */
-    public IncomeAdapter(List<Income> incomes, Context context) {
+    public IncomeAdapter(List<Entry> incomes, Context context) {
         mIncomes = incomes;
         mContext = context;
     }

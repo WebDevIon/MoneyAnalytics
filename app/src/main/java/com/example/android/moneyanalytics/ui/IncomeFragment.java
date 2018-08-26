@@ -15,7 +15,7 @@ import android.widget.Spinner;
 
 import com.example.android.moneyanalytics.R;
 import com.example.android.moneyanalytics.chart.PieChartData;
-import com.example.android.moneyanalytics.model.Income;
+import com.example.android.moneyanalytics.model.Entry;
 import com.example.android.moneyanalytics.model.IncomeAdapter;
 import com.razerdp.widget.animatedpieview.AnimatedPieView;
 import com.razerdp.widget.animatedpieview.AnimatedPieViewConfig;
@@ -115,9 +115,9 @@ public class IncomeFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // TODO: Remove dummy data
-        List<Income> incomes = new ArrayList<>();
+        List<Entry> incomes = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            incomes.add(new Income("Salary", Calendar.getInstance().getTime(), 2000d));
+            incomes.add(new Entry("Salary", Calendar.getInstance().getTime(), 2000d));
         }
 
         IncomeAdapter incomeAdapter = new IncomeAdapter(incomes, getContext());

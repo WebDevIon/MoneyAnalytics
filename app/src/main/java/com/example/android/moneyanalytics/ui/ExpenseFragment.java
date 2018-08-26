@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,17 +13,27 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.example.android.moneyanalytics.R;
+import com.example.android.moneyanalytics.chart.PieChartData;
+import com.example.android.moneyanalytics.model.Entry;
+import com.example.android.moneyanalytics.model.ExpenseAdapter;
+import com.razerdp.widget.animatedpieview.AnimatedPieView;
+import com.razerdp.widget.animatedpieview.AnimatedPieViewConfig;
+import com.razerdp.widget.animatedpieview.data.SimplePieInfo;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ExpensesFragment.OnFragmentInteractionListener} interface
+ * {@link ExpenseFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ExpensesFragment#newInstance} factory method to
+ * Use the {@link ExpenseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ExpensesFragment extends Fragment {
+public class ExpenseFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -33,7 +45,7 @@ public class ExpensesFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public ExpensesFragment() {
+    public ExpenseFragment() {
         // Required empty public constructor
     }
 
@@ -46,8 +58,8 @@ public class ExpensesFragment extends Fragment {
      * @return A new instance of fragment ExpensesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ExpensesFragment newInstance(String param1, String param2) {
-        ExpensesFragment fragment = new ExpensesFragment();
+    public static ExpenseFragment newInstance(String param1, String param2) {
+        ExpenseFragment fragment = new ExpenseFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -68,14 +80,46 @@ public class ExpensesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View rootView = inflater.inflate(R.layout.fragment_expenses, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_expense, container, false);
 
-        Spinner spinner = rootView.findViewById(R.id.expenses_fragment_period_spinner);
+        Spinner spinner = rootView.findViewById(R.id.expense_fragment_period_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(rootView.getContext(),
                 R.array.spinner_period_array, R.layout.spinner_item);
         adapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(adapter);
 
+        //TODO: Remove dummy data for testing purposes only
+        AnimatedPieView mAnimatedPieView = rootView.findViewById(R.id.expense_fragment_pie_view);
+        AnimatedPieViewConfig config = new AnimatedPieViewConfig();
+        config.startAngle(-90)
+                .addData(new SimplePieInfo(10, getResources().getColor(R.color.colorPrimary), "Other"))
+                .addData(new SimplePieInfo(60, getResources().getColor(R.color.colorPrimaryDark), "Food"))
+                .addData(new PieChartData(30, getResources().getColor(R.color.colorAccent), "Car"))
+                .strokeWidth(200)
+                .canTouch(false)
+                .drawText(true)
+                .textSize(80)
+                .textMargin(8)
+                .guidePointRadius(8)
+                .guideLineWidth(6)
+                .textGravity(AnimatedPieViewConfig.ECTOPIC)
+                .duration(700);
+
+        mAnimatedPieView.start(config);
+
+        RecyclerView recyclerView = rootView.findViewById(R.id.expense_fragment_rv);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+
+        // TODO: Remove dummy data
+        List<Entry> expenses = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            expenses.add(new Entry("Service", Calendar.getInstance().getTime(), 100d));
+        }
+
+        ExpenseAdapter expenseAdapter = new ExpenseAdapter(expenses, getContext());
+        recyclerView.setAdapter(expenseAdapter);
 
         return rootView;
     }

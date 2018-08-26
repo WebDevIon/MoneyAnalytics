@@ -13,7 +13,7 @@ import com.example.android.moneyanalytics.R;
  */
 public class DetailActivity extends AppCompatActivity implements
         IncomeFragment.OnFragmentInteractionListener,
-        ExpensesFragment.OnFragmentInteractionListener,
+        ExpenseFragment.OnFragmentInteractionListener,
         SavingsFragment.OnFragmentInteractionListener {
 
     @Override
@@ -42,9 +42,9 @@ public class DetailActivity extends AppCompatActivity implements
                         .replace(R.id.detail_activity_frame_layout, incomeFragment)
                         .commit();
             } else if (fragmentName.equals(getString(R.string.nav_drawer_expenses_string))) {
-                ExpensesFragment expensesFragment = ExpensesFragment.newInstance(fragmentName, "hello");
+                ExpenseFragment expenseFragment = ExpenseFragment.newInstance(fragmentName, "hello");
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.detail_activity_frame_layout, expensesFragment)
+                        .replace(R.id.detail_activity_frame_layout, expenseFragment)
                         .commit();
             } else if (fragmentName.equals(getString(R.string.nav_drawer_savings_string))) {
                 SavingsFragment savingsFragment = SavingsFragment.newInstance(fragmentName, "hello");

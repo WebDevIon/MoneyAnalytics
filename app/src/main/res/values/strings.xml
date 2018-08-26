@@ -87,4 +87,12 @@
 
     <!-- Total text in income fragment -->
     <string name="income_fragment_total_tv">Total</string>
+
+
+    <!-- - - - - - - - - - - - - -
+      - Used in Expense Fragment -
+      - - - - - - - - - - - - - -->
+
+    <!-- Total text in Expense fragment -->
+    <string name="expense_fragment_total_tv">Total</string>
 </resources>
