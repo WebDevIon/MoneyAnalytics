@@ -52,6 +52,14 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        mAddExpense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AddExpenseActivity.class);
+                startActivity(intent);
+            }
+        });
+
         // Here we initialize the drawer and we handle it's states (open or closed)
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

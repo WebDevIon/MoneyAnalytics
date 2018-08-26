@@ -89,6 +89,31 @@
     </string-array>
 
 
+    <!-- - - - - - - - - - - - - - - - - - - - - - -
+      - Used in Spinner expense category selector  -
+      - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <!-- Default text in spinner -->
+    <string name="spinner_expense_category_prompt">Category</string>
+
+    <!-- Spinner options array -->
+    <string-array name="spinner_expense_category_array">
+        <item>Car</item>
+        <item>Clothes</item>
+        <item>Cosmetics</item>
+        <item>Food</item>
+        <item>Gifts</item>
+        <item>Health</item>
+        <item>Home</item>
+        <item>Pets</item>
+        <item>Public transport</item>
+        <item>Restaurants</item>
+        <item>Services</item>
+        <item>Sports</item>
+        <item>Taxi</item>
+    </string-array>
+
+
     <!-- - - - - - - - - - - - - -
       - Used in Income Fragment  -
       - - - - - - - - - - - - - -->
@@ -132,7 +157,7 @@
       - Used in Add Income Activity  -
       - - - - - - - - - - - - - - - -->
 
-    <!-- Fragment Title text in add income activity -->
+    <!-- Activity Title text in add income activity -->
     <string name="add_income_activity_title">Add income</string>
 
     <!-- Amount placeholder text in add income activity -->
@@ -161,4 +186,39 @@
 
     <!-- Ok button text text in add income activity -->
     <string name="add_income_activity_ok_text">OK</string>
+
+
+    <!-- - - - - - - - - - - - - - - -
+      - Used in Add Expense Activity  -
+      - - - - - - - - - - - - - - - -->
+
+    <!-- Activity Title text in add expense activity -->
+    <string name="add_expense_activity_title">Add expense</string>
+
+    <!-- Amount placeholder text in add income activity -->
+    <string name="add_expense_activity_amount_placeholder">0.00</string>
+
+    <!-- Description placeholder text in add income activity -->
+    <string name="add_expense_activity_description_placeholder">Description</string>
+
+    <!-- Category placeholder text in add income activity -->
+    <string name="add_expense_activity_category_placeholder">Category</string>
+
+    <!-- Monthly income text in add income activity -->
+    <string name="add_expense_activity_monthly_expense_text">Monthly expense</string>
+
+    <!-- Today text in add income activity -->
+    <string name="add_expense_activity_today_text">Today</string>
+
+    <!-- Other date text in add income activity -->
+    <string name="add_expense_activity_other_date_text">Other date</string>
+
+    <!-- Other date placeholder text in add income activity -->
+    <string name="add_expense_activity_other_date_placeholder">dd-mm-yyyy</string>
+
+    <!-- Cancel button text text in add income activity -->
+    <string name="add_expense_activity_cancel_text">Cancel</string>
+
+    <!-- Ok button text text in add income activity -->
+    <string name="add_expense_activity_ok_text">OK</string>
 </resources>
