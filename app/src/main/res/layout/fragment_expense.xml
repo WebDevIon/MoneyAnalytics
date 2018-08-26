@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:text="@string/expense_fragment_total_tv"
+            android:text="@string/expense_fragment_total_text"
             android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@+id/expense_fragment_rv"
             app:layout_constraintEnd_toEndOf="parent"

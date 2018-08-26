@@ -13,6 +13,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.android.moneyanalytics.R;
@@ -26,7 +28,9 @@ public class MainActivity extends AppCompatActivity
         DatePickerFragment.OnCompleteListener{
 
     public static final String DETAIL_ACTIVITY_KEY = "detail activity";
+    public static final String ADD_INCOME_ACTIVITY_KEY = "add income activity";
     private TextView mPeriodTv;
+    private Button mAddIncome, mAddExpense;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -37,6 +41,16 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         mPeriodTv = findViewById(R.id.main_period_tv);
+        mAddIncome = findViewById(R.id.add_income_button);
+        mAddExpense = findViewById(R.id.add_expense_button);
+
+        mAddIncome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AddIncomeActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // Here we initialize the drawer and we handle it's states (open or closed)
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -129,7 +143,6 @@ public class MainActivity extends AppCompatActivity
 
             DialogFragment datePickerFragment = new DatePickerFragment();
             datePickerFragment.show(getSupportFragmentManager(), "datePicker");
-
 
         } else if (id == R.id.nav_about) {
 

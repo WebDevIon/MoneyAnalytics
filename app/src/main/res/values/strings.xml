@@ -34,15 +34,6 @@
     <!-- About section -->
     <string name="nav_drawer_about_string">About</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_income_fragment">Hello income fragment</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_expenses_fragment">Hello expenses fragment</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_savings_fragment">Hello savings fragment</string>
-
 
     <!-- - - - - - - - - - - - -
       - Used in About Activity -
@@ -81,6 +72,23 @@
     </string-array>
 
 
+    <!-- - - - - - - - - - - - - - - - - - - - - -
+      - Used in Spinner income category selector -
+      - - - - - - - - - - - - - - - - - - - - - -->
+
+    <!-- Default text in spinner -->
+    <string name="spinner_income_category_prompt">Category</string>
+
+    <!-- Spinner options array -->
+    <string-array name="spinner_income_category_array">
+        <item>Salaries</item>
+        <item>Deposits</item>
+        <item>Gifts</item>
+        <item>Royalties</item>
+        <item>Winnings</item>
+    </string-array>
+
+
     <!-- - - - - - - - - - - - - -
       - Used in Income Fragment  -
       - - - - - - - - - - - - - -->
@@ -94,7 +102,7 @@
       - - - - - - - - - - - - - -->
 
     <!-- Total text in Expense fragment -->
-    <string name="expense_fragment_total_tv">Total</string>
+    <string name="expense_fragment_total_text">Total</string>
 
 
     <!-- - - - - - - - - - - - - -
@@ -102,20 +110,55 @@
       - - - - - - - - - - - - - -->
 
     <!-- Goal text in Savings fragment -->
-    <string name="savings_fragment_goal_tv">Goal</string>
+    <string name="savings_fragment_goal_text">Goal</string>
 
     <!-- Due date text in Savings fragment -->
-    <string name="savings_fragment_due_tv">Due date</string>
+    <string name="savings_fragment_due_text">Due date</string>
 
     <!-- Daily average text in Savings fragment -->
-    <string name="savings_fragment_average_tv">Daily average</string>
+    <string name="savings_fragment_average_text">Daily average</string>
 
     <!-- Biggest save text in Savings fragment -->
-    <string name="savings_fragment_biggest_tv">Biggest save</string>
+    <string name="savings_fragment_biggest_text">Biggest save</string>
 
     <!-- Set goal button text in Savings fragment -->
     <string name="savings_fragment_set_goal_text">Set goal</string>
 
     <!-- Edit goal button text in Savings fragment -->
     <string name="savings_fragment_edit_goal_text">Edit goal</string>
+
+
+    <!-- - - - - - - - - - - - - - - -
+      - Used in Add Income Activity  -
+      - - - - - - - - - - - - - - - -->
+
+    <!-- Fragment Title text in add income activity -->
+    <string name="add_income_activity_title">Add income</string>
+
+    <!-- Amount placeholder text in add income activity -->
+    <string name="add_income_activity_amount_placeholder">0.00</string>
+
+    <!-- Description placeholder text in add income activity -->
+    <string name="add_income_activity_description_placeholder">Description</string>
+
+    <!-- Category placeholder text in add income activity -->
+    <string name="add_income_activity_category_placeholder">Category</string>
+
+    <!-- Monthly income text in add income activity -->
+    <string name="add_income_activity_monthly_income_text">Monthly income</string>
+
+    <!-- Today text in add income activity -->
+    <string name="add_income_activity_today_text">Today</string>
+
+    <!-- Other date text in add income activity -->
+    <string name="add_income_activity_other_date_text">Other date</string>
+
+    <!-- Other date placeholder text in add income activity -->
+    <string name="add_income_activity_other_date_placeholder">dd-mm-yyyy</string>
+
+    <!-- Cancel button text text in add income activity -->
+    <string name="add_income_activity_cancel_text">Cancel</string>
+
+    <!-- Ok button text text in add income activity -->
+    <string name="add_income_activity_ok_text">OK</string>
 </resources>
