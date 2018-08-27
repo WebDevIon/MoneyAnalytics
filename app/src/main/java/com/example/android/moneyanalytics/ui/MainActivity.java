@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.moneyanalytics.R;
 import com.example.android.moneyanalytics.chart.PieChartData;
@@ -165,7 +166,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onDatePicked(String date) {
+    public void onDatePicked(String date, Long timeInMillis) {
         mPeriodTv.setText(date);
+        Toast.makeText(this, timeInMillis.toString(), Toast.LENGTH_SHORT).show();
     }
 }

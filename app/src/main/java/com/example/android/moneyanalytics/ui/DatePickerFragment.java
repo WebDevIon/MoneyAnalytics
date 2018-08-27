@@ -15,7 +15,7 @@ public class DatePickerFragment extends DialogFragment
     public static final String DATE_KEY = "date";
 
     public interface OnCompleteListener {
-        void onDatePicked(String date);
+        void onDatePicked(String date, Long timeInMillis);
     }
 
     private OnCompleteListener mListener;
@@ -43,6 +43,13 @@ public class DatePickerFragment extends DialogFragment
     public void onDateSet(DatePicker view, int year, int month, int day) {
         int correctMonth = month + 1;
         String date = "" + day + "/" + correctMonth + "/" + year;
-        this.mListener.onDatePicked(date);
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, view.getDayOfMonth());
+        cal.set(Calendar.MONTH, view.getMonth());
+        cal.set(Calendar.YEAR, view.getYear());
+        Long timeInMillis = cal.getTimeInMillis();
+
+        this.mListener.onDatePicked(date, timeInMillis);
     }
 }

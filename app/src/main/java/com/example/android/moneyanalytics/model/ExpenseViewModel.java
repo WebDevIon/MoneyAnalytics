@@ -7,7 +7,6 @@ import android.util.Log;
 
 import com.example.android.moneyanalytics.room.EntriesDatabase;
 
-import java.util.Date;
 import java.util.List;
 
 public class ExpenseViewModel extends AndroidViewModel {
@@ -21,20 +20,20 @@ public class ExpenseViewModel extends AndroidViewModel {
         Log.d(TAG, "Actively retrieving the tasks from the DataBase");
     }
 
-    public LiveData<List<Entry>> getSpecificDateEntries(Date entryDate) {
+    public LiveData<List<Entry>> getSpecificDateEntries(Long entryDate) {
         return database.entriesDao().loadSpecificDate(entryDate);
     }
 
-    public LiveData<List<Entry>> getPeriodEntries(Date startDate, Date endDate) {
+    public LiveData<List<Entry>> getPeriodEntries(Long startDate, Long endDate) {
         return database.entriesDao().loadPeriodDate(startDate, endDate);
     }
 
-    public LiveData<List<Entry>> getSpecificDateCategoryEntries(String entryCategory, Date entryDate) {
+    public LiveData<List<Entry>> getSpecificDateCategoryEntries(String entryCategory, Long entryDate) {
         return database.entriesDao().loadSpecificDateCategory(entryCategory, entryDate);
     }
 
     public LiveData<List<Entry>> getPeriodDateCategoryEntries
-            (String entryCategory, Date startDate, Date endDate) {
+            (String entryCategory, Long startDate, Long endDate) {
         return database.entriesDao().loadPeriodDateCategory(entryCategory, startDate, endDate);
     }
 }

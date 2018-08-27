@@ -10,7 +10,6 @@ import android.arch.persistence.room.Update;
 
 import com.example.android.moneyanalytics.model.Entry;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,23 +21,23 @@ public interface EntriesDao {
     LiveData<List<Entry>> loadAllEntries();
 
     @Query("SELECT * FROM entries WHERE category LIKE :entryCategory AND date LIKE :entryDate")
-    LiveData<List<Entry>> loadSpecificDateCategory(String entryCategory, Date entryDate);
+    LiveData<List<Entry>> loadSpecificDateCategory(String entryCategory, Long entryDate);
 
     @Query("SELECT * FROM entries WHERE category LIKE :entryCategory AND date BETWEEN :startDate AND :endDate")
-    LiveData<List<Entry>> loadPeriodDateCategory(String entryCategory, Date startDate, Date endDate);
+    LiveData<List<Entry>> loadPeriodDateCategory(String entryCategory, Long startDate, Long endDate);
 
     @Query("SELECT * FROM entries WHERE date LIKE :entryDate")
-    LiveData<List<Entry>> loadSpecificDate(Date entryDate);
+    LiveData<List<Entry>> loadSpecificDate(Long entryDate);
 
     @Query("SELECT * FROM entries WHERE date BETWEEN :startDate AND :endDate")
-    LiveData<List<Entry>> loadPeriodDate(Date startDate, Date endDate);
+    LiveData<List<Entry>> loadPeriodDate(Long startDate, Long endDate);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertTask(Entry recipe);
+    void insertTask(Entry entry);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateTask(Entry recipe);
+    void updateTask(Entry entry);
 
     @Delete
-    void deleteTask(Entry recipe);
+    void deleteTask(Entry entry);
 }
