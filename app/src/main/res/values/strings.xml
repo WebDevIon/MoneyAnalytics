@@ -83,7 +83,6 @@
     <string-array name="spinner_income_category_array">
         <item>Salaries</item>
         <item>Deposits</item>
-        <item>Gifts</item>
         <item>Royalties</item>
         <item>Winnings</item>
     </string-array>
@@ -106,11 +105,8 @@
         <item>Health</item>
         <item>Home</item>
         <item>Pets</item>
-        <item>Public transport</item>
-        <item>Restaurants</item>
         <item>Services</item>
         <item>Sports</item>
-        <item>Taxi</item>
     </string-array>
 
 

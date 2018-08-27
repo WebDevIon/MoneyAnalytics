@@ -7,7 +7,7 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity(tableName = "entries")
 public class Entry {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int id;
     private Double amount;
     private String name;

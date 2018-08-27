@@ -11,7 +11,7 @@ import com.example.android.moneyanalytics.model.Entry;
 /**
  * This class is responsible for creating the Room Database.
  */
-@Database(entities = {Entry.class}, version = 1, exportSchema = false)
+@Database(entities = {Entry.class}, version = 2, exportSchema = false)
 public abstract class EntriesDatabase extends RoomDatabase {
 
     private static final String LOG_TAG = EntriesDatabase.class.getSimpleName();

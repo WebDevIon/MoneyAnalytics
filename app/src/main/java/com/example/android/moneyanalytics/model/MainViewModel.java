@@ -20,11 +20,11 @@ public class MainViewModel extends AndroidViewModel {
         Log.d(TAG, "Actively retrieving the tasks from the DataBase");
     }
 
-    public LiveData<List<Entry>> getSpecificDateEntries(Long entryDate) {
-        return database.entriesDao().loadSpecificDate(entryDate);
+    public LiveData<List<EntryByCategory>> getEntriesGroupedByCategory(Long startDate, Long endDate) {
+        return database.entriesDao().loadGroupedByCategory(startDate, endDate);
     }
 
-    public LiveData<List<Entry>> getPeriodEntries(Long startDate, Long endDate) {
-        return database.entriesDao().loadPeriodDate(startDate, endDate);
+    public LiveData<List<Entry>> getEntriesByDate(Long startDate, Long endDate) {
+        return database.entriesDao().loadByDate(startDate, endDate);
     }
 }

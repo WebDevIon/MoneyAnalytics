@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -23,6 +24,7 @@ import java.util.Date;
 
 public class AddIncomeActivity extends AppCompatActivity implements DatePickerFragment.OnCompleteListener {
 
+    private static final String TAG = AddIncomeActivity.class.getSimpleName();
     private static final String DATE_RESET_KEY = "dd-mm-yyyy";
     public static final String DATA_INCOME_TYPE_KEY = "income";
     Button mCancel, mOk;
@@ -73,9 +75,13 @@ public class AddIncomeActivity extends AppCompatActivity implements DatePickerFr
                             Toast.LENGTH_SHORT).show();
                 } else {
                     Double amount = Double.parseDouble(mAmount.getText().toString());
+                    Log.d(TAG, "Amount Added: " + amount);
                     String name = mDescription.getText().toString();
+                    Log.d(TAG, "Name Added: " + name);
                     String category = mSpinner.getSelectedItem().toString();
+                    Log.d(TAG, "Category Added: " + category);
                     boolean recurring = mRecurring.isChecked();
+                    Log.d(TAG, "Recurring Added: " + recurring);
                     Long date = null;
 
                     if (mToday.isChecked()) {
@@ -98,6 +104,8 @@ public class AddIncomeActivity extends AppCompatActivity implements DatePickerFr
                             mDateField.setText(dateField);
                         }
                     }
+
+                    Log.d(TAG, "Date Added: " + date);
 
                     mEntry = new Entry(amount, name, category, recurring, date, DATA_INCOME_TYPE_KEY);
 
