@@ -22,14 +22,18 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.android.moneyanalytics.R;
+import com.example.android.moneyanalytics.chart.DefaultPieConfig;
 import com.example.android.moneyanalytics.chart.PieChartData;
 import com.example.android.moneyanalytics.model.Entry;
 import com.example.android.moneyanalytics.model.EntryByCategory;
 import com.example.android.moneyanalytics.model.MainViewModel;
+import com.example.android.moneyanalytics.room.AppExecutors;
+import com.example.android.moneyanalytics.room.EntriesDatabase;
+import com.example.android.moneyanalytics.utils.ColorUtils;
+import com.example.android.moneyanalytics.utils.DateUtils;
 import com.razerdp.widget.animatedpieview.AnimatedPieView;
 import com.razerdp.widget.animatedpieview.AnimatedPieViewConfig;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -52,10 +56,13 @@ public class MainActivity extends AppCompatActivity
     private TextView mPeriodTv, mBalanceTv;
     Button mAddIncome, mAddExpense;
     private List<EntryByCategory> mEntries;
+    private List<Entry> mRecurringEntries;
+    private Entry mRecurringEntry;
     private Long mStartDate = new Date().getTime();
     private Long mEndDate = new Date().getTime();
     private AnimatedPieView mAnimatedPieView;
     private AnimatedPieViewConfig mPieConfig;
+    private EntriesDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +77,8 @@ public class MainActivity extends AppCompatActivity
         mAddIncome = findViewById(R.id.add_income_button);
         mAddExpense = findViewById(R.id.add_expense_button);
         mAnimatedPieView = findViewById(R.id.main_activity_pie_view);
+
+        mDb = EntriesDatabase.getInstance(getApplicationContext());
 
         // Add income button functionality.
         // We launch the add income activity when the button is clicked.
@@ -100,7 +109,9 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        setupViewModel(mStartDate, mEndDate);
+        // Here we set up the ViewModel and we pass the checkRecurring parameter as true to
+        // check for recurring entries that need to be updated.
+        setupViewModel(mStartDate, mEndDate, true);
     }
 
     // Here we save the data that we want to keep during screen rotation,
@@ -125,7 +136,7 @@ public class MainActivity extends AppCompatActivity
                 getResources().getString(R.string.spinner_period_prompt)));
         mStartDate = prefs.getLong(START_DATE_KEY, new Date().getTime());
         mEndDate = prefs.getLong(END_DATE_KEY, new Date().getTime());
-        setupViewModel(mStartDate, mEndDate);
+        setupViewModel(mStartDate, mEndDate, false);
     }
 
     /**
@@ -178,24 +189,25 @@ public class MainActivity extends AppCompatActivity
 
             mPeriodTv.setText(R.string.nav_drawer_today_string);
             mEndDate = new Date().getTime();
-            mStartDate = mEndDate - mEndDate % (24 * 60 * 60 * 1000);
-            setupViewModel(mStartDate, mEndDate);
+            DateUtils dateUtils = new DateUtils(mEndDate);
+            mStartDate = dateUtils.getMidnightDate();
+            setupViewModel(mStartDate, mEndDate, false);
 
         } else if (id == R.id.nav_this_week) {
 
             mPeriodTv.setText(R.string.nav_drawer_week_string);
             mEndDate = new Date().getTime();
-            mStartDate = mEndDate - 604800000;
-            setupViewModel(mStartDate, mEndDate);
+            DateUtils dateUtils = new DateUtils(mEndDate);
+            mStartDate = dateUtils.getAWeekAgoDate();
+            setupViewModel(mStartDate, mEndDate, false);
 
         } else if (id == R.id.nav_this_month) {
 
             mPeriodTv.setText(R.string.nav_drawer_month_string);
-            Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.DAY_OF_MONTH, 1);
             mEndDate = new Date().getTime();
-            mStartDate = cal.getTimeInMillis() - mEndDate % (24 * 60 * 60 * 1000);
-            setupViewModel(mStartDate, mEndDate);
+            DateUtils dateUtils = new DateUtils(mEndDate);
+            mStartDate = dateUtils.getFirstDayOfMonthDate();
+            setupViewModel(mStartDate, mEndDate, false);
 
             Log.d(TAG, "Start date: " + mStartDate + "\nEndDate: " + mEndDate);
 
@@ -224,14 +236,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onDatePicked(String date, Long timeInMillis) {
         mPeriodTv.setText(date);
-        Long timeFromMidnight = new Date().getTime() % (24 * 60 * 60 * 1000);
-        if (timeInMillis > timeInMillis - timeFromMidnight) {
-            mStartDate = timeInMillis - timeFromMidnight;
-        } else {
-            mStartDate = timeInMillis;
-        }
-        mEndDate = timeInMillis + 86400000 - timeFromMidnight;
-        setupViewModel(mStartDate, mEndDate);
+        DateUtils dateUtils = new DateUtils(timeInMillis);
+        mStartDate = dateUtils.getASpecificDayDate();
+        mEndDate = mStartDate + 86400000;
+        setupViewModel(mStartDate, mEndDate, false);
     }
 
     /**
@@ -239,7 +247,7 @@ public class MainActivity extends AppCompatActivity
      * @param startDate the start date used in the queries.
      * @param endDate the end date used in the queries.
      */
-    private void setupViewModel(Long startDate, final Long endDate) {
+    private void setupViewModel(Long startDate, final Long endDate, boolean checkRecurring) {
         MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         viewModel.getEntriesGroupedByCategory(startDate, endDate)
                 .observe(this, new Observer<List<EntryByCategory>>() {
@@ -254,70 +262,43 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
-        viewModel.getEntriesByDate(startDate, endDate)
-                .observe(this, new Observer<List<Entry>>() {
-                    @Override
-                    public void onChanged(@Nullable List<Entry> entries) {
-                        if (entries != null) {
-                            Log.d(TAG, "Normal Entry size: " + entries.size());
-
-                            Double balance = 0d;
-                            Long date = 0L;
-                            boolean isIncome = false;
-
-                            for (Entry entry : entries) {
-                                if (entry.getType().equals(AddIncomeActivity.DATA_INCOME_TYPE_KEY)) {
-                                    isIncome = true;
-                                    break;
-                                }
-                            }
-
-                            if (isIncome) {
+        if (checkRecurring) {
+            Log.d(TAG, "Checking for recurring entries.");
+            viewModel.getRecurringEntries(true)
+                    .observe(this, new Observer<List<Entry>>() {
+                        @Override
+                        public void onChanged(@Nullable List<Entry> entries) {
+                            if (entries != null) {
+                                mRecurringEntries = entries;
+                                Long currentDate = new Date().getTime();
+                                DateUtils dateUtils = new DateUtils(currentDate);
+                                Long targetDate = dateUtils.getTimeAMonthAgo();
                                 for (Entry entry : entries) {
-                                    if (entry.getType().equals(AddIncomeActivity
-                                            .DATA_INCOME_TYPE_KEY)) {
-                                        balance += entry.getAmount();
-                                        date = entry.getDate();
-                                    } else if (entry.getType().equals(AddExpenseActivity
-                                            .DATA_EXPENSE_TYPE_KEY)) {
-                                        if (entry.getDate() > date) {
-                                            balance -= entry.getAmount();
-                                        }
+                                    if (entry.getDate() < targetDate) {
+                                        recreateEntry(entry);
+                                        Log.d(TAG, "Updating recurring entry.");
                                     }
                                 }
                             } else {
-                                for (Entry entry : entries) {
-                                    balance -= entry.getAmount();
-                                }
+                                Log.d(TAG, "No recurring entries updated.");
                             }
-
-                            String balanceStr = balance.toString();
-                            mBalanceTv.setText(balanceStr);
-
-                        } else {
-                            Log.d(TAG, "Normal Entry null!");
                         }
+                    });
+        }
 
-                    }
-                });
     }
 
+    /**
+     * This method is used to populate the Pie Chart and calculate the balance.
+     * @param entries the list of entries passed by the ViewModel.
+     */
     private void processEntries(List<EntryByCategory> entries) {
         Log.d(TAG, "EntryByCategory length: " + entries.size());
 
+        ColorUtils colorUtils = new ColorUtils(getApplicationContext());
         Double totalIncome = 0d;
         Double totalExpense = 0d;
-        mPieConfig = new AnimatedPieViewConfig();
-        mPieConfig.startAngle(-90)
-                .strokeWidth(200)
-                .canTouch(false)
-                .drawText(true)
-                .textSize(80)
-                .textMargin(8)
-                .guidePointRadius(8)
-                .guideLineWidth(6)
-                .textGravity(AnimatedPieViewConfig.ECTOPIC)
-                .duration(700);
+        mPieConfig = new DefaultPieConfig().getDefaultPieConfig(false);
 
         for (EntryByCategory entry : entries) {
             Log.d(TAG, "Entry category: " + entry.getCategory());
@@ -326,8 +307,8 @@ public class MainActivity extends AppCompatActivity
             if (entry.getType().equals(AddExpenseActivity.DATA_EXPENSE_TYPE_KEY)) {
                 totalExpense += entry.getAmount();
 
-                mPieConfig.addData(new PieChartData
-                        (entry.getAmount(), getRandomColor(), entry.getCategory()));
+                mPieConfig.addData(new PieChartData (entry.getAmount(),
+                        colorUtils.getColor(entry.getCategory()), entry.getCategory()));
 
             } else {
                 totalIncome += entry.getAmount();
@@ -336,17 +317,50 @@ public class MainActivity extends AppCompatActivity
 
         mAnimatedPieView.start(mPieConfig);
 
-//        Double balance = totalIncome - totalExpense;
-//        String balanceStr = balance.toString();
-//        mBalanceTv.setText(balanceStr);
+        Double balance = totalIncome - totalExpense;
+        String balanceStr = balance.toString();
+        mBalanceTv.setText(balanceStr);
 
         Log.d(TAG, "EntryByCategory totalExpense: " + totalExpense);
         Log.d(TAG, "EntryByCategory totalIncome: " + totalIncome);
     }
 
+    // TODO: Remove method, this is used for testing purposes only.
     private int getRandomColor() {
         Random rnd = new Random();
         return Color.argb(255, rnd.nextInt(256),
                 rnd.nextInt(256), rnd.nextInt(256));
+    }
+
+    /**
+     * Method used to update the recurring entries in the database.
+     * @param entry the entry that is updated.
+     */
+    private void recreateEntry(final Entry entry){
+        int entryId = entry.getId();
+        Log.d(TAG, "Id of the recurring entry is: " + entryId);
+
+        DateUtils dateUtils = new DateUtils(entry.getDate());
+        Log.d(TAG, "Recurring entry initial date: " + entry.getDate());
+        Long entryUpdatedDate = dateUtils.updateRecurringDate();
+        Log.d(TAG, "Recurring entry updated date: " + entryUpdatedDate);
+
+        mRecurringEntry = new Entry(entry.getAmount(), entry.getName(), entry.getCategory(),
+                entry.isRecurring(), entry.getDate(), entry.getType());
+        mRecurringEntry.setDate(entryUpdatedDate);
+
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDb.entriesDao().insertTask(mRecurringEntry);
+
+                Log.d(TAG, "Recurring entry inserted: " + mRecurringEntry.getName());
+
+                entry.setRecurring(false);
+                mDb.entriesDao().updateTask(entry);
+
+                Log.d(TAG, "Recurring entry updated: " + mRecurringEntry.getName());
+            }
+        });
     }
 }

@@ -24,7 +24,7 @@ public class MainViewModel extends AndroidViewModel {
         return database.entriesDao().loadGroupedByCategory(startDate, endDate);
     }
 
-    public LiveData<List<Entry>> getEntriesByDate(Long startDate, Long endDate) {
-        return database.entriesDao().loadByDate(startDate, endDate);
+    public LiveData<List<Entry>> getRecurringEntries(boolean isRecurring) {
+        return database.entriesDao().loadIfRecurring(isRecurring);
     }
 }

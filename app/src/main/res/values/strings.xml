@@ -79,12 +79,18 @@
     <!-- Default text in spinner -->
     <string name="spinner_income_category_prompt">Category</string>
 
+    <!-- Array strings -->
+    <string name="salaryString">Salaries</string>
+    <string name="depositString">Deposits</string>
+    <string name="royaltiesString">Royalties</string>
+    <string name="winningsString">Winnings</string>
+
     <!-- Spinner options array -->
     <string-array name="spinner_income_category_array">
-        <item>Salaries</item>
-        <item>Deposits</item>
-        <item>Royalties</item>
-        <item>Winnings</item>
+        <item>@string/salaryString</item>
+        <item>@string/depositString</item>
+        <item>@string/royaltiesString</item>
+        <item>@string/winningsString</item>
     </string-array>
 
 
@@ -95,18 +101,30 @@
     <!-- Default text in spinner -->
     <string name="spinner_expense_category_prompt">Category</string>
 
+    <!-- Array strings -->
+    <string name="carString">Car</string>
+    <string name="clothesString">Clothes</string>
+    <string name="cosmeticsString">Cosmetics</string>
+    <string name="foodString">Food</string>
+    <string name="giftsString">Gifts</string>
+    <string name="healthString">Health</string>
+    <string name="homeString">Home</string>
+    <string name="petsString">Pets</string>
+    <string name="servicesString">Services</string>
+    <string name="sportsString">Sports</string>
+
     <!-- Spinner options array -->
     <string-array name="spinner_expense_category_array">
-        <item>Car</item>
-        <item>Clothes</item>
-        <item>Cosmetics</item>
-        <item>Food</item>
-        <item>Gifts</item>
-        <item>Health</item>
-        <item>Home</item>
-        <item>Pets</item>
-        <item>Services</item>
-        <item>Sports</item>
+        <item>@string/carString</item>
+        <item>@string/clothesString</item>
+        <item>@string/cosmeticsString</item>
+        <item>@string/foodString</item>
+        <item>@string/giftsString</item>
+        <item>@string/healthString</item>
+        <item>@string/homeString</item>
+        <item>@string/petsString</item>
+        <item>@string/servicesString</item>
+        <item>@string/sportsString</item>
     </string-array>
 
 

@@ -3,4 +3,25 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!-- Colors used in expenses Category -->
+    <color name="carColor">#B20120</color>
+    <color name="clothesColor">#D6FF19</color>
+    <color name="cosmeticsColor">#1466CC</color>
+    <color name="foodColor">#FF0300</color>
+    <color name="giftsColor">#B23599</color>
+    <color name="healthColor">#35B209</color>
+    <color name="homeColor">#00FFEF</color>
+    <color name="petsColor">#00FF5A</color>
+    <color name="servicesColor">#B27D38</color>
+    <color name="sportsColor">#FF0083</color>
+    
+    <!-- Colors used in income Category -->
+    <color name="salaryColor">#1466CC</color>
+    <color name="royaltiesColor">#D6FF19</color>
+    <color name="depositColor">#35B209</color>
+    <color name="winningsColor">#FF0300</color>
+
+    <!-- Color used in any Category if the Category is not identified -->
+    <color name="noColor">#000000</color>
 </resources>
