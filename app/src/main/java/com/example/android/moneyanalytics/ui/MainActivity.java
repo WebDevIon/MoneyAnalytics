@@ -30,6 +30,7 @@ import com.example.android.moneyanalytics.room.AppExecutors;
 import com.example.android.moneyanalytics.room.EntriesDatabase;
 import com.example.android.moneyanalytics.utils.ColorUtils;
 import com.example.android.moneyanalytics.utils.DateUtils;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.razerdp.widget.animatedpieview.AnimatedPieView;
 import com.razerdp.widget.animatedpieview.AnimatedPieViewConfig;
 
@@ -50,6 +51,12 @@ public class MainActivity extends AppCompatActivity
     public static final String START_DATE_KEY = "start date";
     public static final String END_DATE_KEY = "end date";
     public static final String PERIOD_TEXT_VIEW_KEY = "period";
+    private static final String INCOME_BUTTON_ITEM_ID = "btnInc";
+    private static final String EXPENSE_BUTTON_ITEM_ID = "btnExp";
+    private static final String INCOME_BUTTON_NAME = "Add Income Button";
+    private static final String EXPENSE_BUTTON_NAME = "Add Expense Button";
+    private static final String INCOME_BUTTON_CONTENT_TYPE = "income button clicked";
+    private static final String EXPENSE_BUTTON_CONTENT_TYPE = "expense button clicked";
     private TextView mPeriodTv, mBalanceTv;
     Button mAddIncome, mAddExpense;
     private Entry mRecurringEntry;
@@ -57,11 +64,15 @@ public class MainActivity extends AppCompatActivity
     private Long mEndDate = new Date().getTime();
     private AnimatedPieView mAnimatedPieView;
     private EntriesDatabase mDb;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -74,11 +85,36 @@ public class MainActivity extends AppCompatActivity
 
         mDb = EntriesDatabase.getInstance(getApplicationContext());
 
+
+        // >>> This code is commented because it is only used for testing the Crashlytics
+        // service from Firebase. Note for the reviewer: uncomment it and test it for yourself :) <<<
+        /*
+        Button crashButton = new Button(this);
+        crashButton.setText("Crash!");
+        crashButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Crashlytics.getInstance().crash(); // Force a crash
+            }
+        });
+
+        addContentView(crashButton, new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+         */
+
+
         // Add income button functionality.
         // We launch the add income activity when the button is clicked.
         mAddIncome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Firebase Analytics to log how much a user inputs incomes in the app.
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, INCOME_BUTTON_ITEM_ID);
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, INCOME_BUTTON_NAME);
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, INCOME_BUTTON_CONTENT_TYPE);
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
                 Intent intent = new Intent(getApplicationContext(), AddIncomeActivity.class);
                 startActivity(intent);
             }
@@ -89,6 +125,13 @@ public class MainActivity extends AppCompatActivity
         mAddExpense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Firebase Analytics to log how much a user inputs expenses in the app.
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, EXPENSE_BUTTON_ITEM_ID);
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, EXPENSE_BUTTON_NAME);
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, EXPENSE_BUTTON_CONTENT_TYPE);
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
                 Intent intent = new Intent(getApplicationContext(), AddExpenseActivity.class);
                 startActivity(intent);
             }
