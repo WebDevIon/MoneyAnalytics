@@ -61,4 +61,14 @@ public class DateUtils {
         updatedCal.set(Calendar.DAY_OF_MONTH, initialDay);
         return updatedCal.getTimeInMillis();
     }
+
+    // String with the selected date from milliseconds to "dd/mm/yyyy".
+    public String getDateToString() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(currentDate);
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        return  "" + day + "/" + month + "/" + year;
+    }
 }

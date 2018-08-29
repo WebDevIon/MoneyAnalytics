@@ -68,7 +68,6 @@
         <item>@string/nav_drawer_today_string</item>
         <item>@string/nav_drawer_week_string</item>
         <item>@string/nav_drawer_month_string</item>
-        <item>@string/nav_drawer_date_string</item>
     </string-array>
 
 

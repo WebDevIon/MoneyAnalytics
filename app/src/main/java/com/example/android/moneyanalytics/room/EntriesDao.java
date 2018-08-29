@@ -27,7 +27,7 @@ public interface EntriesDao {
             ":startDate AND :endDate GROUP BY category")
     LiveData<List<EntryByCategory>> loadGroupedByCategory(Long startDate, Long endDate);
 
-    // Query used to populate Recycled views with information about a category.
+    // Query used to populate Recycler views with information about a category.
     @Query("SELECT * FROM entries WHERE category LIKE :entryCategory AND date " +
             "BETWEEN :startDate AND :endDate")
     LiveData<List<Entry>> loadByDateAndCategory(String entryCategory, Long startDate, Long endDate);
@@ -36,7 +36,7 @@ public interface EntriesDao {
     @Query("SELECT * FROM entries WHERE date BETWEEN :startDate AND :endDate ORDER BY date DESC")
     LiveData<List<Entry>> loadByDate(Long startDate, Long endDate);
 
-    // Querry used to retrieve only recurring entries.
+    // Query used to retrieve only recurring entries.
     @Query("SELECT * FROM entries WHERE recurring LIKE :isRecurring")
     LiveData<List<Entry>> loadIfRecurring(boolean isRecurring);
 

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.moneyanalytics.R;
+import com.example.android.moneyanalytics.utils.DateUtils;
 
 import java.util.List;
 
@@ -75,7 +76,7 @@ public class IncomeAdapter extends RecyclerView.Adapter<IncomeAdapter.IncomeView
     @Override
     public void onBindViewHolder(@NonNull final IncomeViewHolder holder, int position) {
         holder.incomeName.setText(mIncomes.get(position).getName());
-        holder.incomeDate.setText(mIncomes.get(position).getDate().toString());
+        holder.incomeDate.setText(new DateUtils(mIncomes.get(position).getDate()).getDateToString());
         holder.incomeAmount.setText(mIncomes.get(position).getAmount().toString());
     }
 
@@ -86,6 +87,10 @@ public class IncomeAdapter extends RecyclerView.Adapter<IncomeAdapter.IncomeView
     @Override
     public int getItemCount() {
         return mIncomes.size();
+    }
+
+    public List<Entry> getEntries(){
+        return mIncomes;
     }
 
 }

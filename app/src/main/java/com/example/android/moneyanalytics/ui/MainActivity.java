@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,7 +35,6 @@ import com.razerdp.widget.animatedpieview.AnimatedPieViewConfig;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Main activity of the app which displays expenses and the balance
@@ -49,19 +47,15 @@ public class MainActivity extends AppCompatActivity
     public static final String TAG = MainActivity.class.getSimpleName();
     public static final String PREFS_NAME = "Main Activity";
     public static final String DETAIL_ACTIVITY_KEY = "detail activity";
-    public static final String ADD_INCOME_ACTIVITY_KEY = "add income activity";
     public static final String START_DATE_KEY = "start date";
     public static final String END_DATE_KEY = "end date";
     public static final String PERIOD_TEXT_VIEW_KEY = "period";
     private TextView mPeriodTv, mBalanceTv;
     Button mAddIncome, mAddExpense;
-    private List<EntryByCategory> mEntries;
-    private List<Entry> mRecurringEntries;
     private Entry mRecurringEntry;
     private Long mStartDate = new Date().getTime();
     private Long mEndDate = new Date().getTime();
     private AnimatedPieView mAnimatedPieView;
-    private AnimatedPieViewConfig mPieConfig;
     private EntriesDatabase mDb;
 
     @Override
@@ -135,7 +129,12 @@ public class MainActivity extends AppCompatActivity
         mPeriodTv.setText(prefs.getString(PERIOD_TEXT_VIEW_KEY,
                 getResources().getString(R.string.spinner_period_prompt)));
         mStartDate = prefs.getLong(START_DATE_KEY, new Date().getTime());
-        mEndDate = prefs.getLong(END_DATE_KEY, new Date().getTime());
+
+        if (prefs.getLong(END_DATE_KEY, new Date().getTime()) < new DateUtils(new Date().getTime()).getMidnightDate()) {
+            mEndDate = prefs.getLong(END_DATE_KEY, new Date().getTime());
+        } else {
+            mEndDate = new Date().getTime();
+        }
         setupViewModel(mStartDate, mEndDate, false);
     }
 
@@ -171,18 +170,24 @@ public class MainActivity extends AppCompatActivity
 
             Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
             intent.putExtra(DETAIL_ACTIVITY_KEY, getString(R.string.nav_drawer_income_string));
+            intent.putExtra(START_DATE_KEY, mStartDate);
+            intent.putExtra(END_DATE_KEY, mEndDate);
             startActivity(intent);
 
         } else if (id == R.id.nav_expenses) {
 
             Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
             intent.putExtra(DETAIL_ACTIVITY_KEY, getString(R.string.nav_drawer_expenses_string));
+            intent.putExtra(START_DATE_KEY, mStartDate);
+            intent.putExtra(END_DATE_KEY, mEndDate);
             startActivity(intent);
 
         } else if (id == R.id.nav_savings) {
 
             Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
             intent.putExtra(DETAIL_ACTIVITY_KEY, getString(R.string.nav_drawer_savings_string));
+            intent.putExtra(START_DATE_KEY, mStartDate);
+            intent.putExtra(END_DATE_KEY, mEndDate);
             startActivity(intent);
 
         } else if (id == R.id.nav_today) {
@@ -254,7 +259,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onChanged(@Nullable List<EntryByCategory> entries) {
                 Log.d(TAG, "Updating list of tasks from LiveData in MainViewModel");
-                mEntries = entries;
                 if (entries != null) {
                     processEntries(entries);
                 } else {
@@ -269,7 +273,6 @@ public class MainActivity extends AppCompatActivity
                         @Override
                         public void onChanged(@Nullable List<Entry> entries) {
                             if (entries != null) {
-                                mRecurringEntries = entries;
                                 Long currentDate = new Date().getTime();
                                 DateUtils dateUtils = new DateUtils(currentDate);
                                 Long targetDate = dateUtils.getTimeAMonthAgo();
@@ -298,7 +301,7 @@ public class MainActivity extends AppCompatActivity
         ColorUtils colorUtils = new ColorUtils(getApplicationContext());
         Double totalIncome = 0d;
         Double totalExpense = 0d;
-        mPieConfig = new DefaultPieConfig().getDefaultPieConfig(false);
+        AnimatedPieViewConfig mPieConfig = new DefaultPieConfig().getDefaultPieConfig(false);
 
         for (EntryByCategory entry : entries) {
             Log.d(TAG, "Entry category: " + entry.getCategory());
@@ -323,13 +326,6 @@ public class MainActivity extends AppCompatActivity
 
         Log.d(TAG, "EntryByCategory totalExpense: " + totalExpense);
         Log.d(TAG, "EntryByCategory totalIncome: " + totalIncome);
-    }
-
-    // TODO: Remove method, this is used for testing purposes only.
-    private int getRandomColor() {
-        Random rnd = new Random();
-        return Color.argb(255, rnd.nextInt(256),
-                rnd.nextInt(256), rnd.nextInt(256));
     }
 
     /**

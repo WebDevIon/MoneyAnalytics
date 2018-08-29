@@ -1,44 +1,73 @@
 package com.example.android.moneyanalytics.ui;
 
-import android.content.Context;
-import android.net.Uri;
+import android.annotation.SuppressLint;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.android.moneyanalytics.R;
+import com.example.android.moneyanalytics.chart.DefaultPieConfig;
 import com.example.android.moneyanalytics.chart.PieChartData;
+import com.example.android.moneyanalytics.model.Entry;
+import com.example.android.moneyanalytics.model.EntryByCategory;
+import com.example.android.moneyanalytics.model.IncomeAdapter;
+import com.example.android.moneyanalytics.model.IncomeViewModel;
+import com.example.android.moneyanalytics.room.EntriesDatabase;
+import com.example.android.moneyanalytics.utils.ColorUtils;
+import com.example.android.moneyanalytics.utils.DateUtils;
 import com.razerdp.widget.animatedpieview.AnimatedPieView;
 import com.razerdp.widget.animatedpieview.AnimatedPieViewConfig;
-import com.razerdp.widget.animatedpieview.data.SimplePieInfo;
+import com.razerdp.widget.animatedpieview.callback.OnPieSelectListener;
+import com.razerdp.widget.animatedpieview.data.IPieInfo;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link IncomeFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
  * Use the {@link IncomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class IncomeFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class IncomeFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
+    public static final String TAG = IncomeFragment.class.getSimpleName();
+    private static final String NO_CATEGORY = "no category";
+    private static final String ARG_START_DATE = "start date";
+    private static final String ARG_END_DATE = "end date";
+    private static final String ARG_SPINNER_ID = "spinner id";
+    private static final String ARG_CATEGORY = "category";
+    public static final String PREFS_NAME = "Income Fragment";
+    private TextView mTotalTextView;
+    private RecyclerView mRecyclerView;
+    private Spinner mSpinner;
+    private String mPieCategory;
+    private AnimatedPieView mAnimatedPieView;
+    private EntriesDatabase mDb;
+    private Long mStartDate;
+    private Long mEndDate;
+    private IncomeAdapter mAdapter;
+    private int mPosition;
 
     public IncomeFragment() {
         // Required empty public constructor
@@ -48,27 +77,57 @@ public class IncomeFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param startDate start date for the query.
+     * @param endDate end date fpr the query.
      * @return A new instance of fragment IncomeFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static IncomeFragment newInstance(String param1, String param2) {
+    public static IncomeFragment newInstance(Long startDate, Long endDate) {
         IncomeFragment fragment = new IncomeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putLong(ARG_START_DATE, startDate);
+        args.putLong(ARG_END_DATE, endDate);
         fragment.setArguments(args);
         return fragment;
     }
 
+    /**
+     * Here we set the date from the main activity for the query.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mStartDate = getArguments().getLong(ARG_START_DATE);
+            mEndDate = getArguments().getLong(ARG_END_DATE);
         }
+    }
+
+    // Here we save the data that we want to keep during screen rotation,
+    // changing activities or leaving the app and returning to it at another time.
+    @Override
+    public void onPause() {
+        super.onPause();
+        SharedPreferences.Editor prefs =
+                getContext().getSharedPreferences(PREFS_NAME, 0).edit();
+        prefs.putInt(ARG_SPINNER_ID, mSpinner.getSelectedItemPosition());
+        prefs.putLong(ARG_START_DATE, mStartDate);
+        prefs.putLong(ARG_END_DATE, mEndDate);
+        prefs.putString(ARG_CATEGORY, mPieCategory);
+        Log.d(TAG, "Stored category: " + mPieCategory);
+        prefs.apply();
+    }
+
+    // Here we restore the data that we saved in onPause.
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences prefs = getContext().getSharedPreferences(PREFS_NAME, 0);
+        mSpinner.setSelection(prefs.getInt(ARG_SPINNER_ID, 0));
+        mStartDate = prefs.getLong(ARG_START_DATE, new Date().getTime());
+        mEndDate = prefs.getLong(ARG_END_DATE, new Date().getTime());
+        mPieCategory = prefs.getString(ARG_CATEGORY, NO_CATEGORY);
+        Log.d(TAG, "Retrieved category: " + mPieCategory);
+        setupViewModel(mStartDate, mEndDate, mPieCategory);
     }
 
     @Override
@@ -78,77 +137,187 @@ public class IncomeFragment extends Fragment {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_income, container, false);
 
-        Spinner spinner = rootView.findViewById(R.id.income_fragment_period_spinner);
+        mDb = EntriesDatabase.getInstance(getContext());
+        mAnimatedPieView = rootView.findViewById(R.id.income_fragment_pie_view);
+        mTotalTextView = rootView.findViewById(R.id.income_fragment_total_value_tv);
+
+        mSpinner = rootView.findViewById(R.id.income_fragment_period_spinner);
+        mSpinner.setOnItemSelectedListener(this);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(rootView.getContext(),
                 R.array.spinner_period_array, R.layout.spinner_item);
         adapter.setDropDownViewResource(R.layout.spinner_item);
-        spinner.setAdapter(adapter);
+        mSpinner.setAdapter(adapter);
 
-        //TODO: Remove dummy data for testing purposes only
-        AnimatedPieView mAnimatedPieView = rootView.findViewById(R.id.income_fragment_pie_view);
-        AnimatedPieViewConfig config = new AnimatedPieViewConfig();
-        config.startAngle(-90)
-                .addData(new SimplePieInfo(10, getResources().getColor(R.color.colorPrimary), "Other"))
-                .addData(new SimplePieInfo(60, getResources().getColor(R.color.colorPrimaryDark), "Food"))
-                .addData(new PieChartData(30, getResources().getColor(R.color.colorAccent), "Car"))
-                .strokeWidth(200)
-                .canTouch(false)
-                .drawText(true)
-                .textSize(80)
-                .textMargin(8)
-                .guidePointRadius(8)
-                .guideLineWidth(6)
-                .textGravity(AnimatedPieViewConfig.ECTOPIC)
-                .duration(700);
-
-        mAnimatedPieView.start(config);
-
-        RecyclerView recyclerView = rootView.findViewById(R.id.income_fragment_rv);
+        mRecyclerView = rootView.findViewById(R.id.income_fragment_rv);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setLayoutManager(layoutManager);
+        DividerItemDecoration decoration = new DividerItemDecoration(getContext(), VERTICAL);
+        mRecyclerView.addItemDecoration(decoration);
 
-        // TODO: Set a IncomeAdapter for the RecyclerView.
+        // Set up a touch helper for the swipe to delete function.
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                mPosition = viewHolder.getAdapterPosition();
+                // Call the AsyncTask which deletes the entry.
+                new AsyncCaller().execute();
+            }
+        }).attachToRecyclerView(mRecyclerView);
+
+        setupViewModel(mStartDate, mEndDate, NO_CATEGORY);
 
         return rootView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+    /**
+     * Method used to set up the View Model.
+     * @param startDate the start date used in the queries.
+     * @param endDate the end date used in the queries.
+     * @param category the category which we want to get the data from.
+     */
+    private void setupViewModel(Long startDate, final Long endDate, String category) {
+        IncomeViewModel viewModel = ViewModelProviders.of(this).get(IncomeViewModel.class);
+        if (category.equals(NO_CATEGORY)) {
+            viewModel.getEntriesGroupedByCategory(startDate, endDate)
+                    .observe(this, new Observer<List<EntryByCategory>>() {
+                        @Override
+                        public void onChanged(@Nullable List<EntryByCategory> entries) {
+                            Log.d(TAG, "Updating list of tasks from LiveData in IncomeViewModel");
+                            if (entries != null) {
+                                processEntries(entries);
+                            } else {
+                                Log.d(TAG, "Query returned no results.");
+                            }
+                        }
+                    });
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            viewModel.getEntriesForCategory(category, startDate, endDate)
+                    .observe(this, new Observer<List<Entry>>() {
+                        @Override
+                        public void onChanged(@Nullable List<Entry> entries) {
+                            displayCategoryItems(entries);
+                        }
+                    });
         }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     * This method is used to populate the Pie Chart and calculate the total.
+     * @param entries the list of entries passed by the ViewModel.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    private void processEntries(List<EntryByCategory> entries) {
+        Log.d(TAG, "Income Fragment EntryByCategory length: " + entries.size());
+
+        ColorUtils colorUtils = new ColorUtils(getContext());
+        Double totalIncome = 0d;
+        AnimatedPieViewConfig mPieConfig = new DefaultPieConfig().getDefaultPieConfig(true);
+        int counter = 0;
+        String lastCategory = NO_CATEGORY;
+
+        mPieConfig.selectListener(new OnPieSelectListener<IPieInfo>() {
+            @Override
+            public void onSelectPie(@NonNull IPieInfo pieInfo, boolean isFloatUp) {
+                mPieCategory = pieInfo.getDesc();
+                Log.d(TAG, "Selected category is: " + mPieCategory);
+                setupViewModel(mStartDate, mEndDate, mPieCategory);
+            }
+        });
+
+        for (EntryByCategory entry : entries) {
+            Log.d(TAG, "Entry category: " + entry.getCategory());
+            Log.d(TAG, "Entry amount: " + entry.getAmount());
+            Log.d(TAG, "Entry type: " + entry.getType());
+            if (entry.getType().equals(AddIncomeActivity.DATA_INCOME_TYPE_KEY)) {
+                totalIncome += entry.getAmount();
+                counter++;
+                lastCategory = entry.getCategory();
+                mPieConfig.addData(new PieChartData (entry.getAmount(),
+                        colorUtils.getColor(entry.getCategory()), entry.getCategory()));
+
+            }
+        }
+
+        mAnimatedPieView.start(mPieConfig);
+
+        String totalIncomeStr = totalIncome.toString();
+        mTotalTextView.setText(totalIncomeStr);
+
+        Log.d(TAG, "Size of entries: " + entries.size());
+
+        // If we have only one category then we display all of it's items.
+        if (counter == 1) {
+            setupViewModel(mStartDate, mEndDate, lastCategory);
+        } else {
+            List<Entry> entriesForAdapter = new ArrayList<>();
+            entriesForAdapter.clear();
+            IncomeAdapter adapter = new IncomeAdapter(entriesForAdapter, getContext());
+            mRecyclerView.setAdapter(adapter);
+        }
+
+        Log.d(TAG, "Income fragment totalIncome: " + totalIncome);
+    }
+
+    /**
+     * Method used to display the contents of a selected category.
+     * @param entries the list containing all the entries from that category.
+     */
+    public void displayCategoryItems (List<Entry> entries) {
+        mAdapter = new IncomeAdapter(entries, getContext());
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    /**
+     * If a spinner item is selected then we change the pie chart to display the
+     * entries for for the selected date.
+     * @param adapterView the object that was selected.
+     * @param i the index of the item that was selected.
+     */
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        String selectedItem = adapterView.getItemAtPosition(i).toString();
+        if (selectedItem.equals(getResources().getString(R.string.nav_drawer_today_string))) {
+            mEndDate = new Date().getTime();
+            DateUtils dateUtils = new DateUtils(mEndDate);
+            mStartDate = dateUtils.getMidnightDate();
+            setupViewModel(mStartDate, mEndDate, NO_CATEGORY);
+        } else if (selectedItem.equals(getResources().getString(R.string.nav_drawer_week_string))) {
+            mEndDate = new Date().getTime();
+            DateUtils dateUtils = new DateUtils(mEndDate);
+            mStartDate = dateUtils.getAWeekAgoDate();
+            setupViewModel(mStartDate, mEndDate, NO_CATEGORY);
+        } else if (selectedItem.equals(getResources().getString(R.string.nav_drawer_month_string))) {
+            mEndDate = new Date().getTime();
+            DateUtils dateUtils = new DateUtils(mEndDate);
+            mStartDate = dateUtils.getFirstDayOfMonthDate();
+            setupViewModel(mStartDate, mEndDate, NO_CATEGORY);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {}
+
+    // AsyncTask used to delete the entry from the database.
+    @SuppressLint("StaticFieldLeak")
+    private class AsyncCaller extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            List<Entry> entries = mAdapter.getEntries();
+            mDb.entriesDao().deleteTask(entries.get(mPosition));
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            setupViewModel(mStartDate, mEndDate, NO_CATEGORY);
+        }
+
     }
 }
