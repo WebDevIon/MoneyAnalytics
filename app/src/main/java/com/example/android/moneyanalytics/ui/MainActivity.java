@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
          */
-
+        // >>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
         // Add income button functionality.
         // We launch the add income activity when the button is clicked.

@@ -36,6 +36,10 @@ public interface EntriesDao {
     @Query("SELECT * FROM entries WHERE date BETWEEN :startDate AND :endDate ORDER BY date DESC")
     LiveData<List<Entry>> loadByDate(Long startDate, Long endDate);
 
+    // Query used to retrieve the Entries between two specified dates for the widget.
+    @Query("SELECT * FROM entries WHERE date BETWEEN :startDate AND :endDate ORDER BY date DESC")
+    List<Entry> loadByDateForWidget(Long startDate, Long endDate);
+
     // Query used to retrieve only recurring entries.
     @Query("SELECT * FROM entries WHERE recurring LIKE :isRecurring")
     LiveData<List<Entry>> loadIfRecurring(boolean isRecurring);
