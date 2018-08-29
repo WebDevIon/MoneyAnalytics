@@ -45,9 +45,7 @@ import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link IncomeFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * The fragment responsible for displaying the income status.
  */
 public class IncomeFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 

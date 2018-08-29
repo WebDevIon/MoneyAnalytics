@@ -71,4 +71,21 @@ public class DateUtils {
         int day = cal.get(Calendar.DAY_OF_MONTH);
         return  "" + day + "/" + month + "/" + year;
     }
+
+    // Time left in days until the end of this month.
+    public int getTimeUntilEndOfMonth() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(currentDate);
+        int today = cal.get(Calendar.DAY_OF_MONTH);
+        cal.set(Calendar.DAY_OF_MONTH,
+                cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        return cal.get(Calendar.DAY_OF_MONTH) - today;
+    }
+
+    // Number of days for the current month.
+    public int getNmberOfDaysForCurrentMonth() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(currentDate);
+        return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
 }

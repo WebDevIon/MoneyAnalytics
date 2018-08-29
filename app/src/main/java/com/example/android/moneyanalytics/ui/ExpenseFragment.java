@@ -45,9 +45,7 @@ import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link ExpenseFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * The fragment responsible for displaying the expenses status.
  */
 public class ExpenseFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 

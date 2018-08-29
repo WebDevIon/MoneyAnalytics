@@ -1,7 +1,6 @@
 package com.example.android.moneyanalytics.ui;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -10,8 +9,7 @@ import com.example.android.moneyanalytics.R;
 /**
  * Detail activity that displays the correct fragment according to the user selection.
  */
-public class DetailActivity extends AppCompatActivity implements
-        SavingsFragment.OnFragmentInteractionListener {
+public class DetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,17 +43,12 @@ public class DetailActivity extends AppCompatActivity implements
                         .replace(R.id.detail_activity_frame_layout, expenseFragment)
                         .commit();
             } else if (fragmentName.equals(getString(R.string.nav_drawer_savings_string))) {
-                SavingsFragment savingsFragment = SavingsFragment.newInstance(fragmentName, "hello");
+                SavingsFragment savingsFragment = new SavingsFragment();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.detail_activity_frame_layout, savingsFragment)
                         .commit();
             }
 
         }
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 }
