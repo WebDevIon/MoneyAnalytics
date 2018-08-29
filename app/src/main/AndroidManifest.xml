@@ -58,7 +58,7 @@
                 android:value="com.example.android.moneyanalytics.ui.MainActivity" />
         </activity>
 
-        <receiver android:name=".MoneyAnalyticsWidget">
+        <receiver android:name=".widget.MoneyAnalyticsWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

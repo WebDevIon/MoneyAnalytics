@@ -1,9 +1,11 @@
-package com.example.android.moneyanalytics;
+package com.example.android.moneyanalytics.widget;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.widget.RemoteViews;
+
+import com.example.android.moneyanalytics.R;
 
 /**
  * Implementation of App Widget functionality.
