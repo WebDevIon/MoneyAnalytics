@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.moneyanalytics.R;
+import com.example.android.moneyanalytics.utils.DateUtils;
 
 import java.util.List;
 
@@ -75,7 +76,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
     @Override
     public void onBindViewHolder(@NonNull final ExpenseAdapter.ExpenseViewHolder holder, int position) {
         holder.ExpenseName.setText(mExpenses.get(position).getName());
-        holder.ExpenseDate.setText(mExpenses.get(position).getDate().toString());
+        holder.ExpenseDate.setText(new DateUtils(mExpenses.get(position).getDate()).getDateToString());
         holder.ExpenseAmount.setText(mExpenses.get(position).getAmount().toString());
     }
 
@@ -86,6 +87,10 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
     @Override
     public int getItemCount() {
         return mExpenses.size();
+    }
+
+    public List<Entry> getEntries(){
+        return mExpenses;
     }
 
 }

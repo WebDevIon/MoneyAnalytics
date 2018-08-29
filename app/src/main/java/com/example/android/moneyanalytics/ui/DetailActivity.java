@@ -11,7 +11,6 @@ import com.example.android.moneyanalytics.R;
  * Detail activity that displays the correct fragment according to the user selection.
  */
 public class DetailActivity extends AppCompatActivity implements
-        ExpenseFragment.OnFragmentInteractionListener,
         SavingsFragment.OnFragmentInteractionListener {
 
     @Override
@@ -41,7 +40,7 @@ public class DetailActivity extends AppCompatActivity implements
                         .replace(R.id.detail_activity_frame_layout, incomeFragment)
                         .commit();
             } else if (fragmentName.equals(getString(R.string.nav_drawer_expenses_string))) {
-                ExpenseFragment expenseFragment = ExpenseFragment.newInstance(fragmentName, "hello");
+                ExpenseFragment expenseFragment = ExpenseFragment.newInstance(startDate, endDate);
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.detail_activity_frame_layout, expenseFragment)
                         .commit();

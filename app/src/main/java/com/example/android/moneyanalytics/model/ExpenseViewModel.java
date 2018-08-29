@@ -20,12 +20,11 @@ public class ExpenseViewModel extends AndroidViewModel {
         Log.d(TAG, "Actively retrieving the tasks from the DataBase");
     }
 
-    public LiveData<List<Entry>> getPeriodEntries(Long startDate, Long endDate) {
-        return database.entriesDao().loadByDate(startDate, endDate);
+    public LiveData<List<EntryByCategory>> getEntriesGroupedByCategory(Long startDate, Long endDate) {
+        return database.entriesDao().loadGroupedByCategory(startDate, endDate);
     }
 
-    public LiveData<List<Entry>> getPeriodDateCategoryEntries
-            (String entryCategory, Long startDate, Long endDate) {
-        return database.entriesDao().loadByDateAndCategory(entryCategory, startDate, endDate);
+    public LiveData<List<Entry>> getEntriesForCategory(String category, Long startDate, Long endDate) {
+        return database.entriesDao().loadByDateAndCategory(category, startDate, endDate);
     }
 }
