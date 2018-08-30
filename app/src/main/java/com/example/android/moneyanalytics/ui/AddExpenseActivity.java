@@ -109,7 +109,8 @@ public class AddExpenseActivity extends AppCompatActivity implements DatePickerF
                     });
 
                     Toast.makeText(AddExpenseActivity.this,
-                            "Expense added!", Toast.LENGTH_SHORT).show();
+                            getResources().getText(R.string.add_expense_activity_added_text),
+                            Toast.LENGTH_SHORT).show();
 
                     finish();
                 }

@@ -117,7 +117,8 @@ public class AddIncomeActivity extends AppCompatActivity implements DatePickerFr
                     });
 
                     Toast.makeText(AddIncomeActivity.this,
-                            "Income added!", Toast.LENGTH_SHORT).show();
+                            getResources().getText(R.string.add_income_activity_added_text),
+                            Toast.LENGTH_SHORT).show();
 
                     finish();
                 }

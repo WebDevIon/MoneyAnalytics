@@ -218,6 +218,9 @@
     <!-- Ok button text in add income activity -->
     <string name="add_income_activity_ok_text">OK</string>
 
+    <!-- Activity added text in add income activity -->
+    <string name="add_income_activity_added_text">Income added!</string>
+
     <!-- Warning text which appears when the form is not complete in add income activity -->
     <string name="add_income_activity_value_warning_text">Please add a value to continue!</string>
     <string name="add_income_activity_description_warning_text">Please add a description to continue!</string>
@@ -256,6 +259,9 @@
 
     <!-- Ok button text in add income activity -->
     <string name="add_expense_activity_ok_text">OK</string>
+
+    <!-- Activity added text in add expense activity -->
+    <string name="add_expense_activity_added_text">Expense added!</string>
 
 
     <!-- - - - - - - - - - - - - - - -

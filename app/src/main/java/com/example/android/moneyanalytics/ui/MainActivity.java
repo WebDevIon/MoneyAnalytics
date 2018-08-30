@@ -1,5 +1,6 @@
 package com.example.android.moneyanalytics.ui;
 
+import android.app.ActivityOptions;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -215,7 +216,13 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra(DETAIL_ACTIVITY_KEY, getString(R.string.nav_drawer_income_string));
             intent.putExtra(START_DATE_KEY, mStartDate);
             intent.putExtra(END_DATE_KEY, mEndDate);
-            startActivity(intent);
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+                startActivity(intent, bundle);
+            } else {
+                startActivity(intent);
+            }
 
         } else if (id == R.id.nav_expenses) {
 
@@ -223,7 +230,13 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra(DETAIL_ACTIVITY_KEY, getString(R.string.nav_drawer_expenses_string));
             intent.putExtra(START_DATE_KEY, mStartDate);
             intent.putExtra(END_DATE_KEY, mEndDate);
-            startActivity(intent);
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+                startActivity(intent, bundle);
+            } else {
+                startActivity(intent);
+            }
 
         } else if (id == R.id.nav_savings) {
 
@@ -231,7 +244,13 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra(DETAIL_ACTIVITY_KEY, getString(R.string.nav_drawer_savings_string));
             intent.putExtra(START_DATE_KEY, mStartDate);
             intent.putExtra(END_DATE_KEY, mEndDate);
-            startActivity(intent);
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+                startActivity(intent, bundle);
+            } else {
+                startActivity(intent);
+            }
 
         } else if (id == R.id.nav_today) {
 
